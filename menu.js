@@ -3,8 +3,8 @@
 window.TOKO = {
   nama: "Mie Story",
   whatsapp: "6282323652121",
-  lat: -5.16096,
-  lng: 119.4164224
+  lat: -6.80973,
+  lng: 110.9224282
 };
 
 // Ongkir berdasarkan jarak (km) - aturan user
