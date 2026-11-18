@@ -2,9 +2,9 @@
 // Isi data warung kamu di sini
 window.TOKO = {
   nama: "Mie Story",
-  whatsapp: "628XXXXXXXXXX",  // ganti nomor WA kamu (format 628xxx)
-  lat: -6.813434,             // ganti latitude warung
-  lng: 110.929535             // ganti longitude warung
+  whatsapp: "6282323652121",
+  lat: -5.16096,
+  lng: 119.4164224
 };
 
 // Ongkir berdasarkan jarak (km) - aturan user
