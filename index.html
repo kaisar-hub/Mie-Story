@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mie Story</title>
+<style>
+  :root { --bg: #1a1207; --surface: #2a1f10; --accent: #c8956c; --text: #f0e6d6; --muted: #a89279; --danger: #e74c3c; --success: #27ae60; }
+  * { box-sizing: border-box; margin: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; }
+
+  header { background: linear-gradient(135deg, #2a1f10 0%, #3d2b15 100%); padding: 24px 16px; text-align: center; border-bottom: 2px solid var(--accent); }
+  header h1 { font-size: 1.5rem; letter-spacing: 0.05em; }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+  main { max-width: 520px; margin: 0 auto; padding: 16px; }
+
+  .section-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin: 16px 0 8px; }
+
+  .metode-card { background: var(--surface); border: 2px solid transparent; border-radius: 12px; padding: 14px; cursor: pointer; margin-bottom: 8px; transition: border-color .2s; }
+  .metode-card:hover { border-color: #555; }
+  .metode-card.aktif { border-color: var(--accent); }
+  .metode-card .judul { font-weight: 600; font-size: 1rem; }
+  .metode-card .sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  .box { background: var(--surface); border-radius: 12px; padding: 16px; margin-top: 14px; }
+  .box h2 { font-size: 1rem; margin-bottom: 10px; }
+
+  input { width: 100%; padding: 10px; margin: 4px 0 8px; border: 1px solid #444; border-radius: 8px; background: var(--bg); color: var(--text); font-size: 0.9rem; }
+  input::placeholder { color: var(--muted); }
+  label { font-size: 0.85rem; color: var(--muted); }
+
+  .lokasi-info { background: rgba(200,149,108,0.1); border: 1px solid var(--accent); border-radius: 10px; padding: 12px; margin: 10px 0; font-size: 0.85rem; }
+  .lokasi-info .jarak { font-weight: 700; color: var(--accent); }
+
+  .ongkir-badge { display: inline-block; background: var(--accent); color: var(--bg); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; }
+  .ongkir-badge.gratis { background: var(--success); color: #fff; }
+  .ongkir-badge.ekspedisi { background: var(--danger); color: #fff; }
+
+  .rincian { font-size: 0.85rem; }
+  .rincian .row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .rincian .row.total-row { font-weight: 700; font-size: 1rem; color: var(--accent); border-top: 1px solid #444; margin-top: 6px; padding-top: 8px; }
+
+  .btn { display: block; width: 100%; background: var(--accent); color: var(--bg); border: 0; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 8px; transition: opacity .2s; }
+  .btn:disabled { opacity: 0.4; cursor: default; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); }
+  .btn-outline:hover { background: rgba(200,149,108,0.15); }
+  .btn-success { background: var(--success); }
+  .btn-back { background: transparent; border: 1.5px solid #666; color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
+
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--muted); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sukses-box { text-align: center; padding: 24px 16px; }
+  .sukses-box .icon { font-size: 3rem; margin-bottom: 12px; }
+  .sukses-box h2 { color: var(--success); margin-bottom: 8px; }
+  .sukses-box p { color: var(--muted); font-size: 0.9rem; }
+
+  /* Page management */
+  .page { display: none; }
+  .page.active { display: block; }
+</style>
+</head>
+<body>
+<header>
+  <h1><span>🍜</span> Mie Story</h1>
+  <p>Selalu ada cerita dalam seporsi Mie</p>
+</header>
+<main>
+  <!-- ═══ PAGE 1: PILIH METODE ═══ -->
+  <div class="page active" id="page-metode">
+    <div class="section-label">Metode Pengambilan</div>
+
+    <div class="metode-card" id="metode-antar" data-metode="antar">
+      <div class="judul">🛵 Pesan Antar / COD</div>
+      <div class="sub">Kami antar ke lokasi kamu</div>
+    </div>
+    <div class="metode-card" id="metode-ambil" data-metode="ambil">
+      <div class="judul">🏪 Ambil Sendiri</div>
+      <div class="sub">Ambil langsung di warung</div>
+    </div>
+
+    <!-- Bagian jam ambil (muncul jika pilih ambil) -->
+    <div id="bagian-jam" style="display:none">
+      <div class="section-label">Jam Pengambilan</div>
+      <label>Pukul berapa pesanan diambil?</label>
+      <input type="time" id="input-jam">
+    </div>
+
+    <!-- Bagian lokasi (muncul jika pilih antar) -->
+    <div id="bagian-lokasi" style="display:none">
+      <div class="section-label">Lokasi Kamu</div>
+      <button class="btn btn-outline" id="btn-lokasi">📍 Bagikan Lokasi (GPS)</button>
+      <div id="lokasi-result" style="display:none"></div>
+    </div>
+
+    <!-- Rincian biaya -->
+    <div class="box" id="bagian-rincian" style="display:none">
+      <h2>Rincian Biaya</h2>
+      <div class="rincian" id="rincian-isi"></div>
+    </div>
+
+    <div class="box">
+      <h2>Detail Pesanan</h2>
+      <label>Nama Pemesan</label>
+      <input id="input-nama" placeholder="Nama kamu">
+      <label>Catatan (opsional)</label>
+      <input id="input-catatan" placeholder="contoh: kurang pedas, tambah telur">
+      <button class="btn" id="btn-kirim" disabled>📤 KIRIM KE WHATSAPP</button>
+    </div>
+  </div>
+
+  <!-- ═══ PAGE 2: SUKSES ═══ -->
+  <div class="page" id="page-sukses">
+    <div class="sukses-box">
+      <div class="icon">✅</div>
+      <h2>Pesanan Terkirim!</h2>
+      <p>Pesanan kamu sudah dikirim ke WhatsApp kami. Kami akan segera menyiapkannya.</p>
+      <button class="btn" id="btn-pesan-lagi" style="margin-top:20px">Pesan Lagi</button>
+    </div>
+  </div>
+</main>
+<script src="menu.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
