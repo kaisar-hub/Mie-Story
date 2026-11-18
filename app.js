@@ -111,6 +111,42 @@
     );
   };
 
+  // ═════════════════════════════════════════
+  //  MAP & DRAGGABLE PIN (manual lokasi)
+  // ═════════════════════════════════════════
+  let mapManual = null;
+  let markerManual = null;
+  let manualCoord = null; // {lat,lng}
+
+  function initManualMap() {
+    if (mapManual) return;
+    const toko = window.TOKO;
+    mapManual = L.map('bagian-peta', { zoomControl: false }).setView([toko.lat, toko.lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(mapManual);
+    markerManual = L.marker([toko.lat, toko.lng], { draggable: true }).addTo(mapManual);
+    manualCoord = { lat: toko.lat, lng: toko.lng };
+    markerManual.on('moveend', e => {
+      const pos = e.target.getLatLng();
+      manualCoord = { lat: pos.lat, lng: pos.lng };
+      const btn = document.getElementById('btn-gunakan-peta');
+      btn.style.display = 'inline-block';
+    });
+  }
+
+  document.getElementById('btn-buka-peta').onclick = () => {
+    document.getElementById('map-wrap').style.display = 'block';
+    initManualMap();
+    setTimeout(() => { mapManual.invalidateSize(); }, 200);
+  };
+
+  document.getElementById('btn-gunakan-peta').onclick = () => {
+    if (!manualCoord) return;
+    lokasiPelanggan = manualCoord;
+    hitungJarak();
+  };
+
   // Hitung jarak via OSRM
   function hitungJarak() {
     const toko = window.TOKO;
